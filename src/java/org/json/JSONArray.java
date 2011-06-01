@@ -368,6 +368,7 @@ extends JSONElement {
      *
      * @return The length (or size).
      */
+    @Override
     public int length() {
         return this.myArrayList.size();
     }

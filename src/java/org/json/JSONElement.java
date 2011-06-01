@@ -45,4 +45,37 @@ public abstract class JSONElement
 	}
 	
 	public abstract int length();
+	
+
+	// UTILITY - PUBLIC
+
+	public static JSONElement from(JSONTokener x)
+	throws JSONException
+	{
+		JSONElement result = null;
+		
+		try
+		{
+			result = new JSONObject(x);
+		}
+		catch(JSONException e)
+		{
+			try
+			{
+				result = new JSONArray(x);
+			}
+			catch (JSONException ex)
+			{
+				throw new JSONException(e.getMessage() + " or " + ex.getMessage());
+			}
+		}
+		
+		return result;
+	}
+	
+	public static JSONElement from(String jsonString)
+	throws JSONException
+	{
+		return from(new JSONTokener(jsonString));
+	}
 }

@@ -707,6 +707,7 @@ extends JSONElement {
      *
      * @return The number of keys in the JSONObject.
      */
+    @Override
     public int length() {
         return this.map.size();
     }
