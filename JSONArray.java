@@ -80,7 +80,8 @@ import java.util.Map;
  * @author JSON.org
  * @version 2011-05-04
  */
-public class JSONArray {
+public class JSONArray
+extends JSONElement {
 
 
     /**

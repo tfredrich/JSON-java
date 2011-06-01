@@ -88,7 +88,8 @@ import java.util.ResourceBundle;
  * @author JSON.org
  * @version 2011-04-05
  */
-public class JSONObject {
+public class JSONObject
+extends JSONElement {
 
     /**
      * JSONObject.NULL is equivalent to the value that JavaScript calls null,
