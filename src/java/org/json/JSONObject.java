@@ -61,7 +61,7 @@ import java.util.ResourceBundle;
  * coercion for you. The opt methods differ from the get methods in that they
  * do not throw. Instead, they return a specified value, such as null.
  * <p>
- * The <code>put</code> methods add or replace values in an object. For example, 
+ * The <code>put</code> methods add or replace values in an object. For example,
  * <pre>myString = new JSONObject().put("JSON", "Hello, World!").toString();</pre>
  * produces the string <code>{"JSON": "Hello, World"}</code>.
  * <p>
@@ -86,7 +86,7 @@ import java.util.ResourceBundle;
  * <li>Numbers may have the <code>0x-</code> <small>(hex)</small> prefix.</li>
  * </ul>
  * @author JSON.org
- * @version 2011-04-05
+ * @version 2011-10-16
  */
 public class JSONObject
 extends JSONElement {
@@ -156,7 +156,7 @@ extends JSONElement {
      * Missing keys are ignored.
      * @param jo A JSONObject.
      * @param names An array of strings.
-     * @throws JSONException 
+     * @throws JSONException
      * @exception JSONException If a value is a non-finite number or if a name is duplicated.
      */
     public JSONObject(JSONObject jo, String[] names) {
@@ -232,7 +232,7 @@ extends JSONElement {
      *
      * @param map A map object that can be used to initialize the contents of
      *  the JSONObject.
-     * @throws JSONException 
+     * @throws JSONException
      */
     public JSONObject(Map map) {
         this.map = new HashMap();
@@ -320,20 +320,20 @@ extends JSONElement {
      */
     public JSONObject(String baseName, Locale locale) throws JSONException {
         this();
-        ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale, 
+        ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale,
                 Thread.currentThread().getContextClassLoader());
 
 // Iterate through the keys in the bundle.
-        
+
         Enumeration keys = bundle.getKeys();
         while (keys.hasMoreElements()) {
             Object key = keys.nextElement();
             if (key instanceof String) {
-    
-// Go through the path, ensuring that there is a nested JSONObject for each 
+
+// Go through the path, ensuring that there is a nested JSONObject for each
 // segment except the last. Add the value using the last segment's name into
 // the deepest nested JSONObject.
-                
+
                 String[] path = ((String)key).split("\\.");
                 int last = path.length - 1;
                 JSONObject target = this;
@@ -351,16 +351,16 @@ extends JSONElement {
         }
     }
 
-    
+
     /**
      * Accumulate values under a key. It is similar to the put method except
      * that if there is already an object stored under the key then a
      * JSONArray is stored under the key to hold all of the accumulated values.
      * If there is already a JSONArray, then the new value is appended to it.
      * In contrast, the put method replaces the previous value.
-     * 
+     *
      * If only one value is accumulated that is not a JSONArray, then the
-     * result will be the same as using put. But if multiple values are 
+     * result will be the same as using put. But if multiple values are
      * accumulated, then the result will be like append.
      * @param key   A key string.
      * @param value An object to be accumulated under the key.
@@ -369,7 +369,7 @@ extends JSONElement {
      *  or if the key is null.
      */
     public JSONObject accumulate(
-        String key, 
+        String key,
         Object value
     ) throws JSONException {
         testValidity(value);
@@ -426,8 +426,8 @@ extends JSONElement {
 // Shave off trailing zeros and decimal point, if possible.
 
         String string = Double.toString(d);
-        if (string.indexOf('.') > 0 && string.indexOf('e') < 0 && 
-        		string.indexOf('E') < 0) {
+        if (string.indexOf('.') > 0 && string.indexOf('e') < 0 &&
+                string.indexOf('E') < 0) {
             while (string.endsWith("0")) {
                 string = string.substring(0, string.length() - 1);
             }
@@ -504,7 +504,7 @@ extends JSONElement {
 
 
     /**
-     * Get the int value associated with a key. 
+     * Get the int value associated with a key.
      *
      * @param key   A key string.
      * @return      The integer value.
@@ -561,7 +561,7 @@ extends JSONElement {
 
 
     /**
-     * Get the long value associated with a key. 
+     * Get the long value associated with a key.
      *
      * @param key   A key string.
      * @return      The long value.
@@ -650,8 +650,8 @@ extends JSONElement {
     public boolean has(String key) {
         return this.map.containsKey(key);
     }
-    
-    
+
+
     /**
      * Increment a property of a JSONObject. If there is no such property,
      * create one with a value of 1. If there is such a property, and if
@@ -668,11 +668,11 @@ extends JSONElement {
         } else if (value instanceof Integer) {
             put(key, ((Integer)value).intValue() + 1);
         } else if (value instanceof Long) {
-            put(key, ((Long)value).longValue() + 1);                
+            put(key, ((Long)value).longValue() + 1);
         } else if (value instanceof Double) {
-            put(key, ((Double)value).doubleValue() + 1);                
+            put(key, ((Double)value).doubleValue() + 1);
         } else if (value instanceof Float) {
-            put(key, ((Float)value).floatValue() + 1);                
+            put(key, ((Float)value).floatValue() + 1);
         } else {
             throw new JSONException("Unable to increment [" + quote(key) + "].");
         }
@@ -744,8 +744,8 @@ extends JSONElement {
 // Shave off trailing zeros and decimal point, if possible.
 
         String string = number.toString();
-        if (string.indexOf('.') > 0 && string.indexOf('e') < 0 && 
-        		string.indexOf('E') < 0) {
+        if (string.indexOf('.') > 0 && string.indexOf('e') < 0 &&
+                string.indexOf('E') < 0) {
             while (string.endsWith("0")) {
                 string = string.substring(0, string.length() - 1);
             }
@@ -948,14 +948,14 @@ extends JSONElement {
      */
     public String optString(String key, String defaultValue) {
         Object object = opt(key);
-        return NULL.equals(object) ? defaultValue : object.toString();        
+        return NULL.equals(object) ? defaultValue : object.toString();
     }
 
 
     private void populateMap(Object bean) {
         Class klass = bean.getClass();
 
-// If klass is a System class then set includeSuperClass to false. 
+// If klass is a System class then set includeSuperClass to false.
 
         boolean includeSuperClass = klass.getClassLoader() != null;
 
@@ -968,7 +968,7 @@ extends JSONElement {
                     String name = method.getName();
                     String key = "";
                     if (name.startsWith("get")) {
-                        if (name.equals("getClass") || 
+                        if (name.equals("getClass") ||
                                 name.equals("getDeclaringClass")) {
                             key = "";
                         } else {
@@ -1149,7 +1149,7 @@ extends JSONElement {
     /**
      * Produce a string in double quotes with backslash sequences in all the
      * right places. A backslash will be inserted within </, producing <\/,
-     * allowing JSON text to be delivered in HTML. In JSON text, a string 
+     * allowing JSON text to be delivered in HTML. In JSON text, a string
      * cannot contain a control character or an unescaped quote or backslash.
      * @param string A String
      * @return  A String correctly formatted for insertion in a JSON text.
@@ -1228,6 +1228,7 @@ extends JSONElement {
      * @return A simple JSON value.
      */
     public static Object stringToValue(String string) {
+        Double d;
         if (string.equals("")) {
             return string;
         }
@@ -1242,8 +1243,8 @@ extends JSONElement {
         }
 
         /*
-         * If it might be a number, try converting it. 
-         * We support the non-standard 0x- convention. 
+         * If it might be a number, try converting it.
+         * We support the non-standard 0x- convention.
          * If a number cannot be produced, then the value will just
          * be a string. Note that the 0x-, plus, and implied string
          * conventions are non-standard. A JSON parser may accept
@@ -1260,9 +1261,12 @@ extends JSONElement {
                 }
             }
             try {
-                if (string.indexOf('.') > -1 || 
+                if (string.indexOf('.') > -1 ||
                         string.indexOf('e') > -1 || string.indexOf('E') > -1) {
-                    return Double.valueOf(string);
+                    d = Double.valueOf(string);
+                    if (!d.isInfinite() && !d.isNaN()) {
+                        return d;
+                    }
                 } else {
                     Long myLong = new Long(string);
                     if (myLong.longValue() == myLong.intValue()) {
@@ -1499,8 +1503,8 @@ extends JSONElement {
      * @throws JSONException If the object contains an invalid number.
      */
      static String valueToString(
-         Object value, 
-         int    indentFactor, 
+         Object value,
+         int    indentFactor,
          int    indent
      ) throws JSONException {
         if (value == null || value.equals(null)) {
@@ -1541,11 +1545,11 @@ extends JSONElement {
 
 
      /**
-      * Wrap an object, if necessary. If the object is null, return the NULL 
-      * object. If it is an array or collection, wrap it in a JSONArray. If 
-      * it is a map, wrap it in a JSONObject. If it is a standard property 
-      * (Double, String, et al) then it is already wrapped. Otherwise, if it 
-      * comes from one of the java packages, turn it into a string. And if 
+      * Wrap an object, if necessary. If the object is null, return the NULL
+      * object. If it is an array or collection, wrap it in a JSONArray. If
+      * it is a map, wrap it in a JSONObject. If it is a standard property
+      * (Double, String, et al) then it is already wrapped. Otherwise, if it
+      * comes from one of the java packages, turn it into a string. And if
       * it doesn't, try to wrap it in a JSONObject. If the wrapping fails,
       * then null is returned.
       *
@@ -1557,16 +1561,16 @@ extends JSONElement {
              if (object == null) {
                  return NULL;
              }
-             if (object instanceof JSONObject || object instanceof JSONArray  || 
-                     NULL.equals(object)      || object instanceof JSONString || 
+             if (object instanceof JSONObject || object instanceof JSONArray  ||
+                     NULL.equals(object)      || object instanceof JSONString ||
                      object instanceof Byte   || object instanceof Character  ||
                      object instanceof Short  || object instanceof Integer    ||
-                     object instanceof Long   || object instanceof Boolean    || 
+                     object instanceof Long   || object instanceof Boolean    ||
                      object instanceof Float  || object instanceof Double     ||
                      object instanceof String) {
                  return object;
              }
-             
+
              if (object instanceof Collection) {
                  return new JSONArray((Collection)object);
              }
@@ -1577,7 +1581,7 @@ extends JSONElement {
                  return new JSONObject((Map)object);
              }
              Package objectPackage = object.getClass().getPackage();
-             String objectPackageName = objectPackage != null ? 
+             String objectPackageName = objectPackage != null ?
                  objectPackage.getName() : "";
              if (
                  objectPackageName.startsWith("java.") ||
@@ -1592,7 +1596,7 @@ extends JSONElement {
          }
      }
 
-     
+
      /**
       * Write the contents of the JSONObject as JSON text to a writer.
       * For compactness, no whitespace is added.
