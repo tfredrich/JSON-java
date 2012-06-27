@@ -31,8 +31,9 @@ import java.util.Iterator;
  * This provides static methods to convert an XML text into a JSONArray or
  * JSONObject, and to covert a JSONArray or JSONObject into an XML text using
  * the JsonML transform.
+ * 
  * @author JSON.org
- * @version 2011-10-05
+ * @version 2012-03-28
  */
 public class JSONML {
 
@@ -52,12 +53,12 @@ public class JSONML {
     ) throws JSONException {
         String     attribute;
         char       c;
-        String     closeTag = null;
+        String       closeTag = null;
         int        i;
         JSONArray  newja = null;
         JSONObject newjo = null;
         Object     token;
-        String     tagName = null;
+        String       tagName = null;
 
 // Test for and skip past these forms:
 //      <!-- ... -->
@@ -95,8 +96,9 @@ public class JSONML {
                         if (c == '-') {
                             if (x.next() == '-') {
                                 x.skipPast("-->");
+                            } else {
+                                x.back();
                             }
-                            x.back();
                         } else if (c == '[') {
                             token = x.nextToken();
                             if (token.equals("CDATA") && x.next() == '[') {
@@ -163,7 +165,7 @@ public class JSONML {
 // attribute = value
 
                         attribute = (String)token;
-                        if (!arrayForm && (attribute == "tagName" || attribute == "childNode")) {
+                        if (!arrayForm && ("tagName".equals(attribute) || "childNode".equals(attribute))) {
                             throw x.syntaxError("Reserved attribute.");
                         }
                         token = x.nextToken();
@@ -224,8 +226,9 @@ public class JSONML {
                 }
             } else {
                 if (ja != null) {
-                    ja.put(token instanceof String ?
-                            XML.stringToValue((String)token) : token);
+                    ja.put(token instanceof String
+                        ? XML.stringToValue((String)token)
+                        : token);
                 }
             }
         }
@@ -280,7 +283,7 @@ public class JSONML {
      * @throws JSONException
      */
     public static JSONObject toJSONObject(XMLTokener x) throws JSONException {
-        return (JSONObject)parse(x, false, null);
+           return (JSONObject)parse(x, false, null);
     }
 
 
@@ -309,12 +312,12 @@ public class JSONML {
      * @throws JSONException
      */
     public static String toString(JSONArray ja) throws JSONException {
-        int          i;
+        int             i;
         JSONObject   jo;
         String       key;
         Iterator     keys;
-        int          length;
-        Object       object;
+        int             length;
+        Object         object;
         StringBuffer sb = new StringBuffer();
         String       tagName;
         String       value;
@@ -397,7 +400,7 @@ public class JSONML {
         String       key;
         Iterator     keys;
         int          length;
-        Object       object;
+        Object         object;
         String       tagName;
         String       value;
 
@@ -417,7 +420,7 @@ public class JSONML {
         keys = jo.keys();
         while (keys.hasNext()) {
             key = keys.next().toString();
-            if (!key.equals("tagName") && !key.equals("childNodes")) {
+            if (!"tagName".equals(key) && !"childNodes".equals(key)) {
                 XML.noSpace(key);
                 value = jo.optString(key);
                 if (value != null) {

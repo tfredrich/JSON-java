@@ -91,6 +91,7 @@
     			<fileset dir="${dir.src.test}">
     				<include name="**/*Test.java"/>
     				<include name="**/*TestCase.java"/>
+    				<include name="**/Test*.java"/>
     			</fileset>
     		</batchtest>
     	</junit>
