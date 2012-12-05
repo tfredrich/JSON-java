@@ -77,7 +77,7 @@ import java.util.Map;
  * </ul>
  *
  * @author JSON.org
- * @version 2012-04-20
+ * @version 2012-11-13
  */
 public class JSONArray
 extends JSONElement {
@@ -558,8 +558,8 @@ extends JSONElement {
     public String optString(int index, String defaultValue) {
         Object object = this.opt(index);
         return JSONObject.NULL.equals(object)
- ? defaultValue : object
-                .toString();
+            ? defaultValue
+            : object.toString();
     }
 
 
@@ -818,7 +818,7 @@ extends JSONElement {
      */
     public String toString() {
         try {
-            return '[' + this.join(",") + ']';
+            return this.toString(0);
         } catch (Exception e) {
             return null;
         }

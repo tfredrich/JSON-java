@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * A JSONObject is an unordered collection of name/value pairs. Its external
@@ -90,10 +91,22 @@ import java.util.ResourceBundle;
  * </ul>
  *
  * @author JSON.org
- * @version 2012-05-29
+ * @version 2012-12-01
  */
 public class JSONObject
 extends JSONElement {
+    /**
+     * The maximum number of keys in the key pool.
+     */
+     private static final int keyPoolSize = 100;
+
+   /**
+     * Key pooling is like string interning, but without permanently tying up
+     * memory. To help conserve memory, storage of duplicated key strings in
+     * JSONObjects will be avoided by using a key pool to manage unique key
+     * string objects. This is used by JSONObject.put(string, object).
+     */
+     private static HashMap keyPool = new HashMap(keyPoolSize);
 
     /**
      * JSONObject.NULL is equivalent to the value that JavaScript calls null,
@@ -703,7 +716,17 @@ extends JSONElement {
      * @return An iterator of the keys.
      */
     public Iterator keys() {
-        return this.map.keySet().iterator();
+        return this.keySet().iterator();
+    }
+
+
+    /**
+     * Get a set of keys of the JSONObject.
+     *
+     * @return A keySet.
+     */
+    public Set keySet() {
+        return this.map.keySet();
     }
 
 
@@ -1101,11 +1124,21 @@ extends JSONElement {
      *  or if the key is null.
      */
     public JSONObject put(String key, Object value) throws JSONException {
+        String pooled;
         if (key == null) {
             throw new JSONException("Null key.");
         }
         if (value != null) {
             testValidity(value);
+            pooled = (String)keyPool.get(key);
+            if (pooled == null) {
+                if (keyPool.size() >= keyPoolSize) {
+                    keyPool = new HashMap(keyPoolSize);
+                }
+                keyPool.put(key, key);
+            } else {
+                key = pooled;
+            }
             this.map.put(key, value);
         } else {
             this.remove(key);
@@ -1218,8 +1251,10 @@ extends JSONElement {
             default:
                 if (c < ' ' || (c >= '\u0080' && c < '\u00a0')
                         || (c >= '\u2000' && c < '\u2100')) {
-                    hhhh = "000" + Integer.toHexString(c);
-                    w.write("\\u" + hhhh.substring(hhhh.length() - 4));
+                    w.write("\\u");
+                    hhhh = Integer.toHexString(c);
+                    w.write("0000", 0, 4 - hhhh.length());
+                    w.write(hhhh);
                 } else {
                     w.write(c);
                 }
